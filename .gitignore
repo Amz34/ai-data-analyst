@@ -7,3 +7,6 @@ logs/
 
 # local\ci.db
 *.db
+
+# local verification harness (not published)
+.hermes/
