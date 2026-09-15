@@ -138,6 +138,25 @@ I do not put unverifiable claims in a README. Everything below is reproducible:
 | Endpoints as documented | `/docs` (FastAPI OpenAPI), `/openapi.json` |
 ---
 
+## Build proof
+
+The badge at the top is live; here is the receipt. Current `main`, both runtimes, zero skipped tests:
+
+<details>
+<summary><b>CI run #6 — Success, 2/2 jobs, 41s</b> (Python 3.11 + 3.12)</summary>
+
+![CI green](assets/ci-green.png)
+
+</details>
+
+Reproduce it locally, offline, with no credentials:
+
+```bash
+pip install -r requirements.txt
+pytest -q                                     # 38 passed
+python -m uvicorn app.main:app --port 8001    # then open http://127.0.0.1:8001
+```
+
 ## Fork it and make it yours
 
 This is the part most repos get wrong. A repo you cannot run in five minutes is a
