@@ -1,20 +1,24 @@
-# Runtime
+# ---- Runtime ---------------------------------------------------------------
 fastapi==0.141.1
 uvicorn[standard]==0.52.4
 SQLAlchemy==2.0.52
 pandas==3.0.5
 numpy==2.4.6
-pydantic==2.13.5
+pydantic[email]==2.13.5
 PyJWT==2.13.0
 passlib==1.7.4
 bcrypt==4.0.1
 openpyxl==3.1.5
+plotly==7.0.0
 python-multipart==0.0.32
+python-dotenv==1.2.3
+PyYAML==6.0.3
 requests==2.34.2
 httpx==0.28.1
 
-# Postgres (only needed when DS_DB_URL points at Postgres)
-# psycopg2-binary==2.9.9
+# ---- Postgres (production / multi-tenant) -----------------------------------
+# SQLite needs nothing extra; install this only when DS_DB_URL points at Postgres
+psycopg2-binary==2.9.12
 
-# Dev / CI
+# ---- Dev / CI ---------------------------------------------------------------
 pytest==9.1.1
