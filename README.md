@@ -4,8 +4,8 @@
 
 [![CI](https://github.com/Amz34/ai-data-analyst/actions/workflows/ci.yml/badge.svg)](https://github.com/Amz34/ai-data-analyst/actions/workflows/ci.yml)
 [![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-blue.svg)](https://www.python.org/downloads/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688.svg)](https://fastapi.tiangolo.com/)
-[![Tests](https://img.shields.io/badge/tests-35%20passing-brightgreen.svg)](#verified-numbers)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688.svg)](https://fastapi.tiangolo.com/)
+[![Tests](https://img.shields.io/badge/tests-38%20passing-brightgreen.svg)](#verified-numbers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![PRs welcome](https://img.shields.io/badge/PRs-welcome-ff69b4.svg)](#fork-it-and-make-it-yours)
 
