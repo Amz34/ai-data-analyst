@@ -1,0 +1,20 @@
+# Runtime
+fastapi==0.141.1
+uvicorn[standard]==0.52.4
+SQLAlchemy==2.0.52
+pandas==3.0.5
+numpy==2.4.6
+pydantic==2.13.5
+PyJWT==2.13.0
+passlib==1.7.4
+bcrypt==4.0.1
+openpyxl==3.1.5
+python-multipart==0.0.32
+requests==2.34.2
+httpx==0.28.1
+
+# Postgres (only needed when DS_DB_URL points at Postgres)
+# psycopg2-binary==2.9.9
+
+# Dev / CI
+pytest==9.1.1
