@@ -133,7 +133,8 @@ def preview(
         "columns": [str(c) for c in df.columns],
         "dtypes": {str(c): str(df[c].dtype) for c in df.columns},
         "nulls": {str(c): int(df[c].isna().sum()) for c in df.columns},
-        "rows": df.head(10).to_dict(orient="records"),
+        # NaN / NaT / numpy scalars are not JSON-safe: round-trip through pandas' encoder
+        "rows": json.loads(df.head(10).to_json(orient="records", date_format="iso")),
     }
 
 

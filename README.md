@@ -59,17 +59,18 @@ cd ai-data-analyst
 python3 -m venv venv && source venv/bin/activate
 pip install -r requirements.txt
 
-cp .env.example .env          # add your LLM key, or leave it blank for local-only mode
+cp .env.example .env          # SQLite by default; add an LLM key for /ask, or leave blank
 uvicorn app.main:app --reload --port 8001
 ```
 
 Open <http://127.0.0.1:8001> → register → upload a CSV → ask it something.
 
-**Zero-config path:** tests and EDA run on SQLite with no external services.
-Point `DS_DB_URL` at Postgres when you want the multi-tenant shape.
+**Zero-config path:** the default `.env` uses a local SQLite file and creates its own
+tables on boot — no Postgres, no Docker, no migrations. Point `DS_DB_URL` at Postgres
+(`pip install psycopg2-binary`) when you want the multi-tenant shape.
 
 ```bash
-pytest -q          # 35 tests, ~25s, no network, no credentials
+pytest -q          # 38 tests, ~35s, no network, no credentials
 ```
 
 ## API surface (the boring part that makes it real)
@@ -77,15 +78,18 @@ pytest -q          # 35 tests, ~25s, no network, no credentials
 | Method | Path | What it does |
 | --- | --- | --- |
 | `GET` | `/api/health`, `/api/healthz` | Liveness + readiness |
-| `POST` | `/auth/register`, `/auth/login` | JWT auth (org-scoped) |
-| `GET` | `/auth/me`, `/orgs`, `/plans` | Identity, organisation, plan tiers |
-| `POST` | `/datasets/upload` | Ingest CSV / Excel / TSV |
-| `GET` | `/datasets/{id}/preview` | Paged preview after profiling |
-| `GET` | `/datasets/{id}/eda` | Full EDA payload (stats + chart specs) |
-| `POST` | `/datasets/{id}/ask` | Natural-language question → code + answer + chart |
-| `POST` | `/datasets/{id}/dashboard` | Materialise a dashboard from a dataset |
-| `GET` | `/dashboards`, `/dashboards/{id}` | List / open saved dashboards |
-| `POST` | `/orgs/{id}/plan` | Plan change (billing hooks) |
+| `POST` | `/api/auth/register`, `/api/auth/login` | JWT auth (org-scoped) |
+| `GET` | `/api/auth/me` | Current user + organisation |
+| `GET` | `/api/billing/plans`, `/api/billing/me` | Plan tiers + this org's plan |
+| `GET` | `/api/admin/orgs` | All orgs (admin token) |
+| `POST` | `/api/admin/orgs/{id}/plan` | Plan change |
+| `POST` | `/api/datasets/upload` | Ingest CSV / Excel / TSV (profiled + cleaned) |
+| `GET` | `/api/datasets`, `/api/datasets/{id}` | List / fetch dataset metadata |
+| `GET` | `/api/datasets/{id}/preview` | Paged preview after cleaning |
+| `GET` | `/api/datasets/{id}/eda` | Full EDA payload (stats + chart specs) |
+| `POST` | `/api/datasets/{id}/ask` | Question → pandas code → sandboxed result + answer |
+| `POST` | `/api/datasets/{id}/dashboard` | Materialise a dashboard from a dataset |
+| `GET` | `/api/dashboards`, `/api/dashboards/{id}` | List / open saved dashboards |
 ---
 
 ## Architecture (and why each gate exists)
@@ -128,7 +132,7 @@ I do not put unverifiable claims in a README. Everything below is reproducible:
 
 | Claim | How to check it |
 | --- | --- |
-| 35 tests pass, 0 failures | `pytest -q` (~26s, no network) |
+| 38 tests pass, 0 failures | `pytest -q` (~35s, no network) |
 | 1,443 lines of app code + 511 lines of tests | `find app tests -name "*.py" \| xargs wc -l` |
 | Zero external services needed for dev | SQLite default in `tests/`, no Docker |
 | Endpoints as documented | `/docs` (FastAPI OpenAPI), `/openapi.json` |

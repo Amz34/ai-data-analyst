@@ -9,6 +9,7 @@ Runs user code in a SEPARATE python process (subprocess + timeout):
 MVP isolation: pattern bans + process boundary. A stricter model
 (namespaces/containers/OS user) is a documented P2 hardening step.
 """
+import json
 import os
 import pickle
 import subprocess
@@ -54,7 +55,7 @@ def _norm(v):
     if isinstance(v, pd.Series):
         return v.to_dict()
     if isinstance(v, pd.DataFrame):
-        return v.head(5).to_dict(orient="records")
+        return json.loads(v.head(5).to_json(orient="records", date_format="iso"))
     if hasattr(v, "item"):
         try:
             return v.item()

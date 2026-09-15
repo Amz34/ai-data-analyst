@@ -1,4 +1,5 @@
 """Chat-to-data helpers: LLM code generation prompt + deterministic fallback."""
+import json
 import pandas as pd
 
 SYSTEM_PROMPT = (
@@ -41,7 +42,7 @@ def normalize_result(v):
     if isinstance(v, pd.Series):
         return v.to_dict()
     if isinstance(v, pd.DataFrame):
-        return v.head(5).to_dict(orient="records")
+        return json.loads(v.head(5).to_json(orient="records", date_format="iso"))
     if hasattr(v, "item"):
         try:
             return v.item()

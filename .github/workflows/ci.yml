@@ -9,6 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      # tests run against in-memory SQLite; the engine still needs a valid DSN at import
+      DS_DB_URL: sqlite:///./ci.db
+      DS_JWT_SECRET: ci-only-secret
     strategy:
       fail-fast: false
       matrix:

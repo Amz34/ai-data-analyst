@@ -1,5 +1,6 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase, sessionmaker
+from sqlalchemy.pool import StaticPool
 
 from . import config
 
@@ -8,7 +9,19 @@ class Base(DeclarativeBase):
     pass
 
 
-engine = create_engine(config.DATABASE_URL, pool_pre_ping=True)
+# The default deployment target is Postgres. For a zero-setup local run the DSN can
+# be a SQLite file; SQLite then needs a connection that survives FastAPI's threadpool.
+_is_sqlite = config.DATABASE_URL.startswith("sqlite")
+
+engine = create_engine(
+    config.DATABASE_URL,
+    pool_pre_ping=True,
+    **(
+        {"connect_args": {"check_same_thread": False}, "poolclass": StaticPool}
+        if _is_sqlite
+        else {}
+    ),
+)
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
 
